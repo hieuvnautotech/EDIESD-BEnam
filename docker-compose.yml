@@ -1,0 +1,51 @@
+version: "3.9"
+name: "esd_be"
+services:
+  application:
+    container_name: esd_edi_be
+    image: local_esd_be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:80
+    environment:
+      - "ConnectionStrings__RedisConnectionString=redis_database:6379"
+      - "ASPNETCORE_ENVIRONMENT=Development"
+    restart: unless-stopped
+    volumes:
+      - D:\AUTONSI\Projects\ESD\ESD_EDI_BE\ESD_EDI_BE\wwwroot:/app/wwwroot
+    network_mode: none
+    command: |
+      sh -c "docker image prune -f"
+    # depends_on:
+    #   - redis_database
+    #   - rabbit-server
+
+networks:
+  default:
+    external: true
+    name: none
+#   redis_database:
+#     container_name: redis_database
+#     image: redis
+#     ports:
+#       - 6379:6379
+#     restart: unless-stopped
+#     volumes:
+#       - redis_data:/data # Mount a volume for Redis data
+
+#   rabbit-server:
+#     container_name: rabbit-server
+#     image: rabbitmq:3-management
+#     hostname: rmq
+#     ports:
+#       - 15672:15672
+#       - 5672:5672
+#     restart: unless-stopped
+#     volumes:
+#       - rabbitmq_data:/var/lib/rabbitmq # Mount a volume for RabbitMQ data
+
+# volumes:
+#   redis_data: # Define a named volume for Redis data
+#   rabbitmq_data: # Define a named volume for RabbitMQ data
